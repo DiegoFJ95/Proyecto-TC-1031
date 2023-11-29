@@ -5,9 +5,9 @@
 #include <string>
 #include <sstream>
 #include "exception.h"
+#include <algorithm>
 
 template <class T> class Equipo;
-
 
 template <class T>
 class Pokemon {
@@ -23,9 +23,6 @@ private:
   int ataque;
   int defensa;
   int velocidad;
-
-
-
 
 	Pokemon<T> *previous;
 	Pokemon<T> *next;
@@ -44,6 +41,7 @@ Pokemon<T>::Pokemon(const Pokemon<T> &source) : nombre(source.nombre), tipo1(sou
 
 
 
+
 template <class T>
 class Equipo {
 public:
@@ -53,30 +51,33 @@ public:
 
 	void addFirst(std::string, std::string, std::string, int, int, int, int);
 	void add(std::string, std::string, std::string, int, int, int, int);
-	std::string    getFirst() const ;
-	std::string    removeFirst() ;
-	int  length() const;
-	std::string get(int) const;
-	bool contains(std::string) const;
+
+	std::string    removeFirst();
+		std::string remove(int);
+
+	void swaps(Pokemon<T>* p1, Pokemon<T>* p2);
+
 	bool empty() const;
 	void clear();
-	std::string toString() const;
-	void operator= (const Equipo&);
 
-	bool set(int, std::string, std::string, std::string, int, int, int, int);
+	std::string toString() const;
+
 	int  indexOf(std::string) const;
-	int  lastIndexOf(std::string) const;
-	std::string remove(int);
-	bool removeFirstOcurrence(std::string);
-	bool removeLastOcurrence(std::string);
+
+	void sort_nombre();
+	void sort_tipo1();
+	void sort_tipo2();
+	void sort_vida();
+	void sort_ataque();
+	void sort_defensa();
+	void sort_velocidad();
+
 
 private:
 	Pokemon<T> *head;
 	Pokemon<T> *tail;
 	int 	 size;
 };
-
-
 
 template <class T>
 Equipo<T>::Equipo() : head(0), tail(0), size(0) {}
@@ -94,34 +95,7 @@ bool Equipo<T>::empty() const {
 }
 
 // NO
-template <class T>
-int Equipo<T>::length() const {
-	return size;
-}
 
-// NO
-template <class T>
-bool Equipo<T>::contains(std::string nom) const {
-	Pokemon<T> *p;
-
-	p = head;
-	while (p != 0) {
-		if (p->nombre == nom) {
-			return true;
-		}
-		p = p->next;
-	}
-	return false;
-}
-
-// NO
-template <class T>
-std::string Equipo<T>::getFirst() const{
-	if (empty()) {
-		throw NoSuchElement();
-	}
-	return head->nombre;
-}
 
 template <class T>
 void Equipo<T>::addFirst(std::string nom, std::string ti1, std::string ti2, int vi, int at, int de, int ve){
@@ -189,28 +163,6 @@ std::string Equipo<T>::removeFirst(){
 }
 
 // NO
-template <class T>
-std::string  Equipo<T>::get(int index) const {
-	int pos;
-	Pokemon<T> *p;
-
-	if (index < 0 || index >= size) {
-		throw IndexOutOfBounds();
-	}
-
-	if (index == 0) {
-		return getFirst();
-	}
-
-	p = head;
-	pos = 0;
-	while (pos != index) {
-		p = p->next;
-		pos++;
-	}
-
-	return p->nombre;
-}
 
 template <class T>
 void Equipo<T>::clear() {
@@ -286,64 +238,6 @@ Equipo<T>::Equipo(const Equipo<T> &source){
 
 // NO
 template <class T>
-void Equipo<T>::operator=(const Equipo<T> &source){
-	Pokemon<T> *p, *q;
-
-	clear();
-	if (source.empty()) {
-		size = 0;
-		head = 0;
-		tail = 0;
-	} else {
-		p = source.head;
-		head = new Pokemon<T>(p->nombre, p->tipo1, p->tipo2, p->vida, p->ataque, p->defensa, p->velocidad);
-		if (head == 0) {
-			throw OutOfMemory();
-		}
-		q = head;
-
-		p = p->next;
-		while(p != 0) {
-			q->next = new Pokemon<T>(p->nombre, p->tipo1, p->tipo2, p->vida, p->ataque, p->defensa, p->velocidad, q, 0);
-			if (q->next == 0) {
-				throw OutOfMemory();
-			}
-			p = p->next;
-			q = q->next;
-		}
-		size = source.size;
-	}
-}
-
-// NO
-template <class T>
-bool Equipo<T>::set(int index, std::string nom, std::string ti1, std::string ti2, int vi, int at, int de, int ve) {
-	int pos;
-	Pokemon<T> *p;
-
-	if (index < 0 || index >= size) {
-		throw IndexOutOfBounds();
-	}
-
-	p = head;
-	pos = 0;
-	while (pos != index) {
-		p = p->next;
-		pos++;
-	}
-
-	p->nombre = nom;
-	p->tipo1 = ti1;
-	p->tipo2 = ti2;
-	p->vida = vi;
-	p->ataque = at;
-	p->defensa = de;
-	p->velocidad = ve;
-	return true;
-}
-
-// NO
-template <class T>
 int Equipo<T>::indexOf(std::string nom) const {
 	int index;
 	Pokemon<T> *p;
@@ -360,22 +254,6 @@ int Equipo<T>::indexOf(std::string nom) const {
 	return -1;
 }
 
-template <class T>
-int Equipo<T>::lastIndexOf(std::string nom) const {
-	int index;
-	Pokemon<T> *p;
-
-	index = size - 1;
-	p = tail;
-	while (p != 0) {
-		if (p->nombre == nom) {
-			return index;
-		}
-		index--;
-		p = p->previous;
-	}
-	return -1;
-}
 
 // NO
 template <class T>
@@ -412,61 +290,99 @@ std::string  Equipo<T>::remove(int index) {
 }
 
 template <class T>
-bool Equipo<T>::removeFirstOcurrence(std::string nom) {
-	Pokemon<T> *p;
+void Equipo<T>::swaps(Pokemon<T>* p1, Pokemon<T>* p2) {
+	std::swap(p1->nombre, p2->nombre);
+	std::swap(p1->tipo1, p2->tipo1);
+	std::swap(p1->tipo2, p2->tipo2);
+	std::swap(p1->vida, p2->vida);
+	std::swap(p1->ataque, p2->ataque);
+	std::swap(p1->defensa, p2->defensa);
+	std::swap(p1->velocidad, p2->velocidad);
+}
 
-	p = head;
-	while (p != 0) {
-		if (p->nombre == nom) {
-			break;
-		}
-		p = p->next;
-	}
 
-	if (p != 0) {
-		if (p->previous == 0) {
-			head = p->next;
-			p->next->previous = 0;
-		} else {
-			p->previous->next = p->next;
-			if (p->next != 0) {
-				p->next->previous = p->previous;
-			}
-		}
-		size--;
-		return true;
-	}
-
-	return false;
+template <class T>
+void Equipo<T>::sort_nombre() {
+    for (Pokemon<T>* p1 = head; p1 != nullptr; p1 = p1->next) {
+        for (Pokemon<T>* p2 = p1->next; p2 != nullptr; p2 = p2->next) {
+            if (p1->nombre > p2->nombre) {
+                // Intercambiar los Pokémon
+								swaps(p1,p2);
+            }
+        }
+    }
 }
 
 template <class T>
-bool Equipo<T>::removeLastOcurrence(std::string nom) {
-	Pokemon<T> *p;
+void Equipo<T>::sort_tipo1() {
+    for (Pokemon<T>* p1 = head; p1 != nullptr; p1 = p1->next) {
+        for (Pokemon<T>* p2 = p1->next; p2 != nullptr; p2 = p2->next) {
+            if (p1->tipo1 > p2->tipo1) {
+                // Intercambiar los Pokémon
+								swaps(p1,p2);
+            }
+        }
+    }
+}
 
-	p = tail;
-	while (p != 0) {
-		if (p->nombre == nom) {
-			break;
-		}
-		p = p->previous;
-	}
+template <class T>
+void Equipo<T>::sort_tipo2() {
+    for (Pokemon<T>* p1 = head; p1 != nullptr; p1 = p1->next) {
+        for (Pokemon<T>* p2 = p1->next; p2 != nullptr; p2 = p2->next) {
+            if (p1->tipo2 > p2->tipo2) {
+                // Intercambiar los Pokémon
+								swaps(p1,p2);
+            }
+        }
+    }
+}
 
-	if (p != 0) {
-		if (p->previous == 0) {
-			head = p->next;
-			p->next->previous = 0;
-		} else {
-			p->previous->next = p->next;
-			if (p->next != 0) {
-				p->next->previous = p->previous;
-			}
-		}
-		size--;
-		return true;
-	}
+template <class T>
+void Equipo<T>::sort_vida() {
+    for (Pokemon<T>* p1 = head; p1 != nullptr; p1 = p1->next) {
+        for (Pokemon<T>* p2 = p1->next; p2 != nullptr; p2 = p2->next) {
+            if (p1->vida < p2->vida) {
+                // Intercambiar los Pokémon
+								swaps(p1,p2);
+            }
+        }
+    }
+}
 
-	return false;
+template <class T>
+void Equipo<T>::sort_ataque() {
+    for (Pokemon<T>* p1 = head; p1 != nullptr; p1 = p1->next) {
+        for (Pokemon<T>* p2 = p1->next; p2 != nullptr; p2 = p2->next) {
+            if (p1->ataque < p2->ataque) {
+                // Intercambiar los Pokémon
+								swaps(p1,p2);
+            }
+        }
+    }
+}
+
+template <class T>
+void Equipo<T>::sort_defensa() {
+    for (Pokemon<T>* p1 = head; p1 != nullptr; p1 = p1->next) {
+        for (Pokemon<T>* p2 = p1->next; p2 != nullptr; p2 = p2->next) {
+            if (p1->defensa < p2->defensa) {
+                // Intercambiar los Pokémon
+								swaps(p1,p2);
+            }
+        }
+    }
+}
+
+template <class T>
+void Equipo<T>::sort_velocidad() {
+    for (Pokemon<T>* p1 = head; p1 != nullptr; p1 = p1->next) {
+        for (Pokemon<T>* p2 = p1->next; p2 != nullptr; p2 = p2->next) {
+            if (p1->velocidad < p2->velocidad) {
+                // Intercambiar los Pokémon
+								swaps(p1,p2);
+            }
+        }
+    }
 }
 
 #endif /* DLIST_H_ */
