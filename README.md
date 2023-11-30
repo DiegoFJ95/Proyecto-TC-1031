@@ -10,34 +10,34 @@ El programa implementa un algoritmo de ordenamiento de tipo Bubble Sort en los m
 
 ### Hace un análisis de complejidad correcto y completo todas las estructuras de datos y cada uno de sus usos en el programa
 
-*Constructores*
+**Constructores**
 Tanto de la clase Pokemon y Equipo tienen una complejidad de O(1) ya que solo rellenan los atributos predeterminados con valores dados.
 
-*empty()*
+**empty()**
 O(1) al comprobar si la cabeza y la cola de la lista están vacías.
 
-*addFirst()*
+**addFirst()**
 O(1) ya que crea un nuevo elemento y lo pone al inicio de la lista, con posición conocida al estar en head.
 
-*add()*
+**add()**
 O(1) ya que funciona igual que addFirst() solo que lo añade al final definiendolo como la nueva tail.
 
-*removeFisrt()*
+**removeFisrt()**
 O(1) ya que elimina head y redefine al siguiente elemento como la nueva head.
 
-*remove()*
+**remove()**
 O(N) ya que debe recorrer la estructura hasta la posición especificada para llevar a cabo la eliminación del elemento.
 
-*clear()*
+**clear()**
 O(N) ya que recorre toda la estructura para ir eliminando a cada elemento.
 
-*toString()*
+**toString()**
 O(N) ya que recorre toda la estructura y va añadiendo los parámetros de cada elemento a un string.
 
-*IndexToString()*
+**IndexToString()**
 O(N) ya que recorre toda la estructura hasta llegar al elemento deseado para añadir sus parámetros a un string.
 
-*indexOf()*
+**indexOf()**
 O(N) ya que recorre toda la estructura hasta encontrar un elemento que coincida con la condición de búsqueda para devolver su posición.
 
 ### Hace un análisis de complejidad correcto y completo para todos los demás componentes del programa y determina la complejidad final del programa.
