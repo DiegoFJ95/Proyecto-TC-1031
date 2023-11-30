@@ -10,7 +10,7 @@ Equipo<int> EquipoPKMN;
 int main(){
 
   std::ifstream inputFile ("default.pkmn");
-  std::ofstream saveFile ("save.pkmn");
+
   std::string Fnombre;
   std::string Ftipo1;
   std::string Ftipo2;
@@ -39,7 +39,7 @@ int main(){
   int velocidad;
 
   while(continuar==true){
-    std::cout<<"\nSelecciona una accion:\n\n1. Mostrar tu equipo. \n2. Annadir un pokemon. \n3. Ordenar tu equipo. \n4. Eliminar un pokemon \n5. Eliminar tu equipo \n6.Cargar datos previos \n7. Salir.\n";
+    std::cout<<"\nSelecciona una accion:\n\n1. Mostrar tu equipo. \n2. Consultar un Pokemon \n3. Annadir un pokemon. \n4. Ordenar tu equipo. \n5. Eliminar un pokemon \n6. Eliminar tu equipo \n7. Cargar datos previos \n8. Borrar datos previos \n9. Salir.\n";
     std::cin>>seleccion;
 
     if(seleccion==1){
@@ -47,6 +47,14 @@ int main(){
     }
 
     else if(seleccion==2){
+      std::string elegido;
+      std::cout<<"Que pokemon quieres consultar? (escribe su nombre)\n";
+      std::cin>>elegido;
+      int numPkmn = EquipoPKMN.indexOf(elegido);
+      std::cout<<EquipoPKMN.IndexToString(numPkmn);
+    }
+
+    else if(seleccion==3){
       std::cout<<"\nComo se llama?";
       std::cin>>nom;
       std::cout<<"\nCual es su primer tipo?";
@@ -55,19 +63,21 @@ int main(){
       std::cin>>tip2;
       std::cout<<"\nCuanta vida tiene?";
       std::cin>>vida;
-      std::cout<<"\nCuanta ataque tiene?";
+      std::cout<<"\nCuanto ataque tiene?";
       std::cin>>ataque;
       std::cout<<"\nCuanta defensa tiene?";
       std::cin>>defensa;
       std::cout<<"\nCuanta velocidad tiene?";
       std::cin>>velocidad;
       EquipoPKMN.add(nom,tip1,tip2,vida,ataque,defensa,velocidad);
+      std::ofstream saveFile ("save.pkmn", std::ios::app);
       if(saveFile){
         saveFile<<nom<<" "<<tip1<<" "<<tip2<<" "<<vida<<" "<<ataque<<" "<<defensa<<" "<<velocidad<<"\n";
       }
+      saveFile.close();
     }
 
-    else if(seleccion==3){
+    else if(seleccion==4){
       int sort;
       std::cout<<"\nSelecciona un parametro para ordenar:\n\n1. Por nombre.\n2. Por tipo principal.\n3. Por tipo secundario.\n4. Por puntos de vida.\n5. Por ataque.\n6. Por defensa.\n7. Por velocidad.\n";
       std::cin>>sort;
@@ -97,7 +107,7 @@ int main(){
       }
     }
 
-    else if(seleccion==4){
+    else if(seleccion==5){
       std::string elegido;
       std::cout<<"Que pokemon quieres eliminar? (escribe su nombre)\n";
       std::cin>>elegido;
@@ -105,7 +115,7 @@ int main(){
       EquipoPKMN.remove(numPkmn);
     }
 
-    else if(seleccion==5){
+    else if(seleccion==6){
       int confirmar;
       std::cout<<"Estas seguro que quieres eliminar a todo tu equipo? \n1. Si \n2. No \n";
       std::cin>>confirmar;
@@ -114,15 +124,22 @@ int main(){
       }
     }
 
-    else if(seleccion==6){
-      // if(saveFile){
-      //   while(saveFile >>Fnombre>>Ftipo1>>Ftipo2>>Fvida>>Fataque>>Fdefensa>>Fvelocidad){
-      //     EquipoPKMN.add(Fnombre, Ftipo1, Ftipo2, Fvida, Fataque, Fdefensa, Fvelocidad);
-      //   }
-      // }
+    else if(seleccion==7){
+      std::ifstream saveFile ("save.pkmn");
+      if(saveFile){
+        while(saveFile >>Fnombre>>Ftipo1>>Ftipo2>>Fvida>>Fataque>>Fdefensa>>Fvelocidad){
+          EquipoPKMN.add(Fnombre, Ftipo1, Ftipo2, Fvida, Fataque, Fdefensa, Fvelocidad);
+        }
+      }
+      saveFile.close();
     }
 
-    else if(seleccion==7){
+    else if(seleccion==8){
+      std::ofstream saveFile ("save.pkmn");
+      saveFile.close();
+    }
+
+    else if(seleccion==9){
       continuar = false;
     }
 
