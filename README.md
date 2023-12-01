@@ -5,12 +5,12 @@ Diego Isaac Fuentes Juvera A01705506.
 
 Correr con mingw: g++ main.cpp EquipoPokemon.h
 
-##Anotaciones
+## Anotaciones
 
 - Al ordenar alfabéticamente las mayúsculas se despliegan primero que las minúsculas por su valor ASCII.
 - Tratar de introducir la información con el tipo de dato correcto para el correcto funcionamiento del programa.
 
-##Descripción del programa
+## Descripción del programa
 
 El programa está basado en la saga de videojuegos de Pokemon, donde el jugador puede capturar y coleccionar diferentes Pokemon. Este programa ofrece esa misma funcionalidad, donde el usuario puede tener su propio equipo de Pokemon ilimitados, además de agregar y eliminar nuevos pokemon, ordenarlos según sus características, guardar sus nuevos pokemon para la siguiente sesión, etc. todo a través de la consola.
 
