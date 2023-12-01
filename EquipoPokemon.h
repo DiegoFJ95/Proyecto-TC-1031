@@ -340,8 +340,6 @@ template <class T>
 void Equipo<T>::sort_nombre() {
   Pokemon<T>* p1;
   Pokemon<T>* p2;
-  p1 = head;
-  p2 = p1->next;
 
   for(int i = 0; i <=size; i++){
     for (int f = 0; f <(size-i-1); f++ ) {
