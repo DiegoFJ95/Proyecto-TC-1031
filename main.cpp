@@ -30,13 +30,6 @@ int main(){
 
   int seleccion;
   bool continuar = true;
-  std::string nom;
-  std::string tip1;
-  std::string tip2;
-  int vida;
-  int ataque;
-  int defensa;
-  int velocidad;
 
   while(continuar==true){
     std::cout<<"\nSelecciona una accion:\n\n1. Mostrar tu equipo. \n2. Consultar un Pokemon \n3. Annadir un pokemon. \n4. Ordenar tu equipo. \n5. Eliminar un pokemon \n6. Eliminar tu equipo \n7. Cargar datos previos \n8. Borrar datos previos \n9. Salir.\n";
@@ -56,23 +49,23 @@ int main(){
 
     else if(seleccion==3){
       std::cout<<"\nComo se llama?";
-      std::cin>>nom;
+      std::cin>>Fnombre;
       std::cout<<"\nCual es su primer tipo?";
-      std::cin>>tip1;
+      std::cin>>Ftipo1;
       std::cout<<"\nCual es su segundo tipo?";
-      std::cin>>tip2;
+      std::cin>>Ftipo2;
       std::cout<<"\nCuanta vida tiene?";
-      std::cin>>vida;
+      std::cin>>Fvida;
       std::cout<<"\nCuanto ataque tiene?";
-      std::cin>>ataque;
+      std::cin>>Fataque;
       std::cout<<"\nCuanta defensa tiene?";
-      std::cin>>defensa;
+      std::cin>>Fdefensa;
       std::cout<<"\nCuanta velocidad tiene?";
-      std::cin>>velocidad;
-      EquipoPKMN.add(nom,tip1,tip2,vida,ataque,defensa,velocidad);
+      std::cin>>Fvelocidad;
+      EquipoPKMN.add(Fnombre,Ftipo1,Ftipo2,Fvida,Fataque,Fdefensa,Fvelocidad);
       std::ofstream saveFile ("save.pkmn", std::ios::app);
       if(saveFile){
-        saveFile<<nom<<" "<<tip1<<" "<<tip2<<" "<<vida<<" "<<ataque<<" "<<defensa<<" "<<velocidad<<"\n";
+        saveFile<<Fnombre<<" "<<Ftipo1<<" "<<Ftipo2<<" "<<Fvida<<" "<<Fataque<<" "<<Fdefensa<<" "<<Fvelocidad<<"\n";
       }
       saveFile.close();
     }
@@ -135,7 +128,7 @@ int main(){
     }
 
     else if(seleccion==8){
-      std::ofstream saveFile ("save.pkmn");
+      std::ofstream saveFile ("save.pkmn", std::ofstream::trunc);
       saveFile.close();
     }
 
