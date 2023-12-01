@@ -1,6 +1,7 @@
 # Proyecto-TC-1031
 Proyecto de estructuras de datos y algoritmos fundamentales.
-Diego Isaac Fuentes Juvera A01705506
+
+Diego Isaac Fuentes Juvera A01705506.
 
 Correr con mingw: g++ main.cpp EquipoPokemon.h
 
